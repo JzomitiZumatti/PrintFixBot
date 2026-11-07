@@ -1,13 +1,45 @@
 package com.example.printfixbot.controller;
 
-import com.example.printfixbot.entity.Manufacturer;
+import com.example.printfixbot.dto.request.manufacturer.CreateManufacturerDTO;
+import com.example.printfixbot.dto.response.manufacturer.ManufacturerResponseDTO;
 import com.example.printfixbot.service.ManufacturerService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/manufacturers")
+public class ManufacturerController {
+    private final ManufacturerService manufacturerService;
+
+    @Autowired
+    public ManufacturerController(ManufacturerService manufacturerService) {
+        this.manufacturerService = manufacturerService;
+    }
+
+    @PostMapping
+    public ResponseEntity<ManufacturerResponseDTO> createManufacturer(@RequestBody CreateManufacturerDTO createManufacturerDTO) {
+        ManufacturerResponseDTO response = manufacturerService.createManufacturer(createManufacturerDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ManufacturerResponseDTO> getManufacturerById(@PathVariable Long id) {
+        ManufacturerResponseDTO response = manufacturerService.getManufacturerById(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ManufacturerResponseDTO>> getAllManufacturers() {
+        List<ManufacturerResponseDTO> manufacturers = manufacturerService.getAllManufacturers();
+        return ResponseEntity.ok(manufacturers);
+    }
+}
+
+/*
 @RestController
 @RequestMapping("/manufacturer")
 @AllArgsConstructor
@@ -39,3 +71,4 @@ public class ManufacturerController {
         return manufacturerService.deleteManufacturerById(id);
     }
 }
+ */
